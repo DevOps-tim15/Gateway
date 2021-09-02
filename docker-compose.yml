@@ -1,0 +1,71 @@
+version: "3.8"
+services:
+  gateway:
+    image: nginx:1.19.8-alpine
+    ports:
+      - 8080:8080
+    networks:
+      - servers
+    depends_on:
+      - auth-service
+    volumes:
+      - ./Gateway/nginx.conf:/etc/nginx/nginx.conf
+      - ./Gateway/api_gateway.conf:/etc/nginx/api_gateway.conf  
+
+  auth-service:
+    build:
+      context: ../Authentication
+      dockerfile: Dockerfile
+      args:
+        STAGE: ${STAGE:-dev}
+      target: ${TARGET:-appServerRuntime}
+    image: kaca97/auth:${VERSION:-0.0.1}-${STAGE:-dev}
+    container_name: auth
+    restart: on-failure
+    ports:
+      - 8081:8080
+    environment:
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-sa}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-zgadija}
+      DATABASE_DOMAIN: ${DATABASE_DOMAIN:-database}
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA_AUTH:-userauth}
+    networks:
+      - servers
+    depends_on:
+      - database
+    
+  database:
+    image: mysql:${MYSQL_VERSION:-8.0.26}
+    container_name: mysql
+    restart: always
+    networks:
+      - servers
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-password}
+      MYSQL_USER: ${MYSQL_USER:-sa}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-zgadija}
+    volumes:
+      - database-data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+  frontend-service:
+    build:
+      context: ../Frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: on-failure
+    networks:
+      - servers
+    ports:
+      - 4200:4200
+
+volumes:
+  database-data:
+    name: nistagram-database
+
+networks:
+  servers:
+    name: servers
+    driver: bridge
