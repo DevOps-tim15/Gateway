@@ -29,10 +29,38 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-zgadija}
       DATABASE_DOMAIN: ${DATABASE_DOMAIN:-database}
       DATABASE_SCHEMA: ${DATABASE_SCHEMA_AUTH:-userauth}
+      KAFKA_DOMAIN: ${KAFKA_HOSTNAME}
+      KAFKA_PORT: ${KAFKA_PORT}
     networks:
       - servers
     depends_on:
       - database
+      - kafka-service
+
+  user-service:
+    build:
+      context: ../User
+      dockerfile: Dockerfile
+      args:
+        STAGE: ${STAGE:-dev}
+      target: ${TARGET:-appServerRuntime}
+    image: kaca97/user:${VERSION:-0.0.1}-${STAGE:-dev}
+    container_name: user-service
+    restart: on-failure
+    ports:
+      - 8082:8080
+    environment:
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-sa}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-zgadija}
+      DATABASE_DOMAIN: ${DATABASE_DOMAIN:-database}
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA_USER:-userservice}
+      KAFKA_DOMAIN: ${KAFKA_HOSTNAME}
+      KAFKA_PORT: ${KAFKA_PORT}
+    networks:
+      - servers
+    depends_on:
+      - database
+      - kafka-service
     
   database:
     image: mysql:${MYSQL_VERSION:-8.0.26}
@@ -60,6 +88,36 @@ services:
       - servers
     ports:
       - 4200:4200
+
+  zookeeper-service:
+    image: zookeeper:latest
+    container_name: zoo
+    hostname: ${ZOOKEEPER_HOSTNAME}
+    restart: always
+    ports:
+      - "${ZOOKEEPER_PORT}:2181"
+      - "${ZOOKEEPER_PORT_ADMIN}:8080"
+    networks:
+      - servers
+  
+  kafka-service:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    hostname: ${KAFKA_HOSTNAME}
+    ports:
+      - "${KAFKA_PORT}:9092"
+    restart: on-failure
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "${ZOOKEEPER_HOSTNAME}:2181"
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka-service:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-kafka-service}:${KAFKA_PORT}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+    depends_on:
+      - zookeeper-service
+    networks:
+      - servers
 
 volumes:
   database-data:
