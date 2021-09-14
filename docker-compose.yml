@@ -104,16 +104,16 @@ services:
       - database-data:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d
 
-#  frontend-service:
-#    build:
-#      context: ../Frontend
-#      dockerfile: Dockerfile
-#    container_name: frontend
-#    restart: on-failure
-#    networks:
-#      - servers
-#    ports:
-#      - 4200:4200
+  frontend-service:
+    build:
+      context: ../Frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: on-failure
+    networks:
+      - servers
+    ports:
+      - 4200:4200
 
   zookeeper-service:
     image: zookeeper:latest

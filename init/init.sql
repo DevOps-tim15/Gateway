@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS user_t
 `birth_date` VARCHAR(255),
 `biography` VARCHAR(255),
 `verified` BIT(1),
-`canBeTagged` BIT(1),
-`isPrivate` BIT(1),
+`can_be_tagged` BIT(1),
+`is_private` BIT(1),
 PRIMARY KEY (id)
 );
 
@@ -57,7 +57,7 @@ USE `userauth`;
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('1','ROLE_REGISTERED_USER');
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('2','ROLE_AGENT');
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('3','ROLE_ADMIN');
-INSERT INTO `user_t` (`id`,`first_name`, `last_name`, `email`, `username`, `password`, `phone`, `website_url`, `sex`, `birth_date`, `biography`, `verified`, `canBeTagged`, `isPrivate`) 
+INSERT INTO `user_t` (`id`,`first_name`, `last_name`, `email`, `username`, `password`, `phone`, `website_url`, `sex`, `birth_date`, `biography`, `verified`, `can_be_tagged`, `is_private`) 
 VALUES ('5','Jova', 'Jovic', 'jova.jovic@gmail.com', 'jova', '$2a$12$ix4Ep6eG2ajt5yjWpAlRHusH1srR8GXdh0FvrgRWnVv2hZVRWEhoC', '0601234567', 'somesite.com', 'male', '01.01.01.', 'bio', 1, 1, 0);
 INSERT INTO user_authority (user_id, authority_id) VALUES (5, 3);
 INSERT INTO verification_tokens (`id`, `token`, `user_id`) VALUES (5, 'joca-token', 5);
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS user_t
 `birth_date` VARCHAR(255),
 `biography` VARCHAR(255),
 `verified` BIT(1),
-`canBeTagged` BIT(1),
-`isPrivate` BIT(1),
+`can_be_tagged` BIT(1),
+`is_private` BIT(1),
 PRIMARY KEY (id)
 );
 
@@ -113,7 +113,7 @@ USE `userservice`;
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('1','ROLE_REGISTERED_USER');
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('2','ROLE_AGENT');
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('3','ROLE_ADMIN');
-INSERT INTO `user_t` (`id`,`first_name`, `last_name`, `email`, `username`, `password`, `phone`, `website_url`, `sex`, `birth_date`, `biography`, `verified`, `canBeTagged`, `isPrivate`) 
+INSERT INTO `user_t` (`id`,`first_name`, `last_name`, `email`, `username`, `password`, `phone`, `website_url`, `sex`, `birth_date`, `biography`, `verified`, `can_be_tagged`, `is_private`) 
 VALUES ('5','Jova', 'Jovic', 'jova.jovic@gmail.com', 'jova', '$2a$12$ix4Ep6eG2ajt5yjWpAlRHusH1srR8GXdh0FvrgRWnVv2hZVRWEhoC', '0601234567', 'somesite.com', 'male', '01.01.01.', 'bio', 1, 1, 0);
 INSERT INTO user_authority (user_id, authority_id) VALUES (5, 3);
 INSERT INTO verification_tokens (`id`, `token`, `user_id`) VALUES (5, 'joca-token', 5);
@@ -141,8 +141,8 @@ CREATE TABLE IF NOT EXISTS user_t
 `birth_date` VARCHAR(255),
 `biography` VARCHAR(255),
 `verified` BIT(1),
-`canBeTagged` BIT(1),
-`isPrivate` BIT(1),
+`can_be_tagged` BIT(1),
+`is_private` BIT(1),
 PRIMARY KEY (id)
 );
 
@@ -169,7 +169,7 @@ USE `postservice`;
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('1','ROLE_REGISTERED_USER');
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('2','ROLE_AGENT');
 INSERT INTO `authorities` (`id`,`user_type`) VALUES ('3','ROLE_ADMIN');
-INSERT INTO `user_t` (`id`,`first_name`, `last_name`, `email`, `username`, `password`, `phone`, `website_url`, `sex`, `birth_date`, `biography`, `verified`, `canBeTagged`, `isPrivate`) 
+INSERT INTO `user_t` (`id`,`first_name`, `last_name`, `email`, `username`, `password`, `phone`, `website_url`, `sex`, `birth_date`, `biography`, `verified`, `can_be_tagged`, `is_private`) 
 VALUES ('5','Jova', 'Jovic', 'jova.jovic@gmail.com', 'jova', '$2a$12$ix4Ep6eG2ajt5yjWpAlRHusH1srR8GXdh0FvrgRWnVv2hZVRWEhoC', '0601234567', 'somesite.com', 'male', '01.01.01.', 'bio', 1, 1, 0);
 INSERT INTO user_authority (user_id, authority_id) VALUES (5, 3);
 INSERT INTO verification_tokens (`id`, `token`, `user_id`) VALUES (5, 'joca-token', 5);
